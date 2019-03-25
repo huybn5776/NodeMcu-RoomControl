@@ -7,8 +7,7 @@ local tmrId2 = 5
 
 local _offsets = { [0] = 0x80, 0xC0, 0x94, 0xD4 } -- 20x4
 
---[[
-i2c.setup(0, 6, 7, i2c.SLOW)
+i2c.setup(0, 3, 4, i2c.SLOW)
 i2cWrite = function(self, b, mode)
   i2c.start(0)
   i2c.address(0, self._adr, i2c.TRANSMITTER)
@@ -17,7 +16,6 @@ i2cWrite = function(self, b, mode)
   i2c.write(0, bh + 4, bh, bl + 4, bl)
   i2c.stop(0)
 end
-]]--
 
 -- Back light on/off.
 local function light  (self, on)

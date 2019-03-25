@@ -13,14 +13,3 @@ function getSp3State(callback)
     callback(on)
   end)
 end
-
-function toggleRoomLight()
-  coroutine.wrap(function()
-    local on = await(getSp3State)
-    if on then
-      roomOff()
-    else
-      roomOn()
-    end
-  end)()
-end

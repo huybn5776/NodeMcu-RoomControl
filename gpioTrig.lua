@@ -9,7 +9,9 @@ function regIoTrig(pin)
       else
         onTrigLow(pin)
       end
-      lcd:print('D' .. pin .. ':' .. level, 0, 4 + (pin - 1) * 5)
+      if lcd then
+        lcd:print('D' .. pin .. ':' .. level, 0, 4 + (pin - 1) * 5)
+      end
       gpio.trig(pin, level == gpio.HIGH and 'down' or 'up')
     end
     gpio.trig(pin, gpio.read(pin) == gpio.HIGH and 'down' or 'up', pinCallback)
@@ -31,9 +33,9 @@ function onTrigHigh(pin)
   local pinHighTimeSpan = trigHighTimes[pin % 2 + 1] and
       (trigHighTimes[pin] - trigHighTimes[pin % 2 + 1]) or nil
   if pinHighTimeSpan then
-    log('high', pin, math.floor(pinHighTimeSpan / usPerMs))
+    print('high', pin, math.floor(pinHighTimeSpan / usPerMs))
   else
-    log('high', pin)
+    print('high', pin)
   end
 
   if (trigHighTimes[1] and trigHighTimes[2])
@@ -55,7 +57,7 @@ function onTrigHigh(pin)
 end
 
 function onTrigLow(pin)
-  log('low ', pin)
+  print('low ', pin)
   trigHighTimes[1], trigHighTimes[2] = nil, nil
 end
 
@@ -69,7 +71,7 @@ function needIgnoreTrig()
   if timeRemain > 0 then
     ignoreOneTrigUntil, trigHighTimes[1], trigHighTimes[2],
     trigLowTimes[1], trigLowTimes[2] = nil, nil, nil, nil, nil
-    log('Trig ignored, remain ' .. math.floor(timeRemain / 1000) .. 'ms.')
+    print('Trig ignored, remain ' .. math.floor(timeRemain / 1000) .. 'ms.')
     return true
   end
   return false
