@@ -68,7 +68,7 @@ httpTasks = {}
 
 -- Run http GET, or schedule it if have multiple task to be done.
 function httpGet(url, name, callback)
-  if #httpTasks and url then
+  if #httpTasks > 0 and url then
     table.insert(httpTasks, { url, name, callback })
     return
   end
