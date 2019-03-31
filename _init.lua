@@ -129,7 +129,7 @@ end
 -- Download LFS image from file server (ex:json-server) then apply it.
 function lfsOta()
   local fileName = 'lfs.img'
-  download('192.168.4.128', 3000, '/' .. fileName, fileName,
+  download(config.fileServerIp, 3000, '/' .. fileName, fileName,
       function()
         print('File downloaded: ' .. fileName, file.list(fileName)[fileName])
         loadImg(fileName)

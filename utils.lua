@@ -75,21 +75,6 @@ function log(...)
   writeLog(unpack(arg))
 end
 
-function updateTime()
-  httpGet('http://worldtimeapi.org/api/timezone/Asia/Taipei', 'getTime',
-      function(data)
-        local _, indexFrom = data:find('"unixtime":"')
-        data = data:sub(indexFrom + 1);
-        local indexTo = data:find('"')
-        local offsetSecond = 1
-        local unixTime = tonumber(data:sub(1, indexTo - 1))
-        rtctime.set(unixTime + 28800 + offsetSecond, 0)
-        tmr.alarm(0, 100, tmr.ALARM_SINGLE, function()
-          print('Time updated: ' .. getTime())
-        end)
-      end)
-end
-
 function getTime()
   local sec, uSec = rtctime.get()
   local tm = rtctime.epoch2cal(sec)

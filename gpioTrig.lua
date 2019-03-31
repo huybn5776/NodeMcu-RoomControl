@@ -43,9 +43,11 @@ function onTrigHigh(pin)
       return
     end
 
+    -- trig D1 -> D2
     if trigHighTimes[1] < trigHighTimes[2] then
       roomOff()
     end
+    -- trig D2 -> D1
     if trigHighTimes[1] > trigHighTimes[2] then
       roomOn()
       trigLowTimes[1], trigLowTimes[2] = nil, nil
