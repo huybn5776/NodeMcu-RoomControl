@@ -22,22 +22,28 @@ regIoTrig(2)
 trigHighTimes = {}
 trigLowTimes = {}
 ignoreOneTrigUntil = nil
+enableControl = true
 
 -- Check is whether entering/leaving the room on high level.
 function onTrigHigh(pin)
   trigHighTimes[pin] = tmr.now()
   trigLowTimes[pin] = nil
 
-  local pinHighTimeSpan = trigHighTimes[pin % 2 + 1] and
-      (trigHighTimes[pin] - trigHighTimes[pin % 2 + 1]) or nil
-  if pinHighTimeSpan then
-    log('high', pin, math.floor(pinHighTimeSpan / usPerMs))
-  else
+  local timespan = trigHighTimes[pin % 2 + 1] and
+      (trigHighTimes[pin] - trigHighTimes[pin % 2 + 1]) or 0
+  if timespan == 0 then
     log('high', pin)
+  else
+    log('high', pin, math.floor(timespan / usPerMs))
   end
 
-  if (trigHighTimes[1] and trigHighTimes[2])
-      and math.abs(trigHighTimes[1] - trigHighTimes[2]) < 10 * usPerSecond then
+  if enableControl ~= true then
+    return
+  end
+
+  if timespan < 10 * usPerSecond -- trig timeout
+      and timespan > 150 * usPerMs  -- de-Ghost
+  then
 
     if needIgnoreTrig() then
       return
@@ -71,7 +77,7 @@ function needIgnoreTrig()
   if timeRemain > 0 then
     ignoreOneTrigUntil, trigHighTimes[1], trigHighTimes[2],
     trigLowTimes[1], trigLowTimes[2] = nil, nil, nil, nil, nil
-    log('Trig ignored, remain ' .. math.floor(timeRemain / 1000) .. 'ms.')
+    log('Trig ignored, remain ' .. math.floor(timeRemain / 1000000) .. 's.')
     return true
   end
   return false

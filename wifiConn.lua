@@ -31,7 +31,7 @@ local function wifiInit()
       wifi.sta.setip({
         ip = config.ip,
         netmask = config.netmask or '255.255.255.0',
-        gateway = config.gateway or '192.168.1.1',
+        gateway = config.gateway or '192.168.4.1',
       })
     end
     connectedWifi = nil
@@ -49,17 +49,18 @@ function updateWifiStatusLcd()
 end
 
 function updateTime()
+  disableLogOnce = true
   httpGet('http://worldtimeapi.org/api/timezone/Asia/Taipei', 'getTime',
       function(data)
-        local _, indexFrom = data:find('"unixtime":"')
+        local _, indexFrom = data:find('"unixtime":')
         data = data:sub(indexFrom + 1);
-        local indexTo = data:find('"')
+        local indexTo = data:find(',')
         local offsetSecond = 1
         local unixTime = tonumber(data:sub(1, indexTo - 1))
         rtctime.set(unixTime + 28800 + offsetSecond, 0)
         tmr.alarm(0, 100, tmr.ALARM_SINGLE, function()
           print('Time updated: ' .. getTime())
-          writeLog('System ON')
+          writeLog('Time updated')
         end)
       end)
 end

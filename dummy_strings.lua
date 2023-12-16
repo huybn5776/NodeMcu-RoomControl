@@ -29,7 +29,7 @@ local preload2 = "	", "\r", "\r\n", "[\r\n]", ",", ":", ";", " ", "  ", "       
 "trigLowTimes", "unpack", "up", "websocket.client", "wifi.packet", "writeFile", "writeLog", "yield",
 "coroutine", "heap", "heap = ", "insert", "lcd", "await", "loadImg", "log",
 "needIgnoreTrig", "readImg", "usPerMs", "usPerSecond", "wrap", "task", "lfsOta",
-"conn", "connect", "fileList", 'ram.txt', "ms.", ',\r\n', 'printRam', 'rtctime'
+"conn", "connect", "fileList", 'ram.txt', "ms.", ',\r\n', 'printRam', 'rtctime', 'disableLog'
 
 local preload_lcd = "TRANSMITTER", "_adr", "_ctl", "lcd1602.lua",
 "NodeMCU", "Version 2.2.1", "bootTextDisplaying", "checkBootText", "clear", "define_char",

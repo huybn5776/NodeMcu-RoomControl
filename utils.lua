@@ -19,6 +19,15 @@ function await(func, ...)
   return coroutine.yield(result)
 end
 
+function setTimeout(callback, time)
+  if (callback == nil or time == nil) then
+    return
+  end
+  tmr.alarm(6, time, tmr.ALARM_SINGLE, function()
+    callback(data)
+  end)
+end
+
 function printTableSorted(tablePairs)
   local tKeys = {}
   local maxKeyLength = 0
@@ -70,17 +79,26 @@ function printLog()
   printFile('log.txt')
 end
 
+disableLog = nil
 function log(...)
   print(unpack(arg))
-  writeLog(unpack(arg))
+  if disableLogOnce == true then
+    disableLogOnce = nil
+  else
+    writeLog(unpack(arg))
+  end
 end
 
 function getTime()
   local sec, uSec = rtctime.get()
+  if (sec == 0 and uSec == 0) then
+    updateTime()
+  end
   local tm = rtctime.epoch2cal(sec)
   return string.format('%02d-%02d %02d:%02d:%02d.%03d',
       tm['mon'], tm['day'], tm['hour'], tm['min'], tm['sec'],
-      math.floor(uSec / 1000))
+      math.floor(uSec / 1000)
+  )
 end
 
 -- Schedule an load LFS image task, then load it after restart to prevent "not enough memory" issue.
@@ -113,3 +131,6 @@ function printRam()
   file.close()
 end
 
+function mod(a, b)
+  return a - (math.floor(a/b)*b)
+end
